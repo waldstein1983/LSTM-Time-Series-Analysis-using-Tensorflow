@@ -113,6 +113,7 @@ def lstm_model(time_steps, rnn_layers, dense_layers=None, learning_rate=0.01, op
             return input_layers
 
     def _lstm_model(X, y):
+        X = tf.cast(X, tf.float32)
         stacked_lstm = rnn.MultiRNNCell(lstm_cells(rnn_layers), state_is_tuple=True)
         x_ =  tf.unstack(X, num=time_steps, axis=1)
 
