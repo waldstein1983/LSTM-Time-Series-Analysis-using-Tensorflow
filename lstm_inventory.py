@@ -133,3 +133,30 @@ plot_test, = plt.plot(test_y, label='test')
 plot_predicted, = plt.plot(predicted, label='predicted')
 plt.legend(handles=[plot_predicted, plot_test])
 plt.show()
+
+
+def invert_scale(scaler, X, value):
+    new_row = [x for x in X] + [value]
+    array = numpy.array(new_row)
+    array = array.reshape(1, len(array))
+    inverted = scaler.inverse_transform(array)
+    return inverted[0, -1]
+##############try new prediction
+import numpy
+last_observe = test_X[len(test_X) - 1, -1]
+current_inv = raw_values[len(raw_values) - 1]
+new_prediction = list()
+for i in range (1,20):
+    last_observe = last_observe.reshape(last_observe.shape[0], 1, 1)
+    # last_observe = numpy.array([last_observe])
+    yhat = np.asmatrix(regressor.predict(last_observe), dtype=np.float32)
+    # yhat = forecast_lstm(lstm_model, 1, last_observe)
+    yhat_inverted = invert_scale(scaler, last_observe, yhat)
+    new_price = current_inv + yhat_inverted
+    new_prediction.append(new_price)
+    print (new_price)
+    current_price = new_price
+    last_observe = yhat
+
+plt.plot(new_prediction)
+plt.show()
